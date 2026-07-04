@@ -16,13 +16,11 @@ class FeedPage(BasePage):
         return int(self.get_text(FeedPageLocators.TODAY_COUNTER))
 
     def get_orders_in_progress_numbers(self):
-        elements = self.driver.find_elements(*FeedPageLocators.ORDERS_IN_PROGRESS)
+        elements = self.find_elements(FeedPageLocators.ORDERS_IN_PROGRESS)
         return [element.text for element in elements if element.text]
 
     def wait_order_number_in_progress(self, order_number):
-        self.wait.until(
-            lambda driver: order_number in driver.page_source
-        )
+        self.wait_text_in_page_source(order_number)
 
     def wait_today_counter_increased(self, old_value):
         self.wait.until(

@@ -1,5 +1,3 @@
-from selenium.webdriver import ActionChains
-
 from pages.base_page import BasePage
 from locators.main_page_locators import MainPageLocators
 
@@ -28,55 +26,10 @@ class MainPage(BasePage):
         return self.get_text(MainPageLocators.INGREDIENT_COUNTER)
 
     def drag_ingredient_to_basket(self):
-        ingredient = self.find_element(MainPageLocators.INGREDIENT_CARD)
-        drop_area = self.find_element(MainPageLocators.TOP_BUN_DROP_AREA)
-
-        if self.driver.capabilities["browserName"] == "firefox":
-            self.driver.execute_script(
-                """
-                const source = arguments[0];
-                const target = arguments[1];
-                const dataTransfer = new DataTransfer();
-
-                source.dispatchEvent(new DragEvent('dragstart', {
-                    bubbles: true,
-                    cancelable: true,
-                    dataTransfer
-                }));
-
-                target.dispatchEvent(new DragEvent('dragenter', {
-                    bubbles: true,
-                    cancelable: true,
-                    dataTransfer
-                }));
-
-                target.dispatchEvent(new DragEvent('dragover', {
-                    bubbles: true,
-                    cancelable: true,
-                    dataTransfer
-                }));
-
-                target.dispatchEvent(new DragEvent('drop', {
-                    bubbles: true,
-                    cancelable: true,
-                    dataTransfer
-                }));
-
-                source.dispatchEvent(new DragEvent('dragend', {
-                    bubbles: true,
-                    cancelable: true,
-                    dataTransfer
-                }));
-                """,
-                ingredient,
-                drop_area,
-            )
-        else:
-            ActionChains(self.driver)\
-                .click_and_hold(ingredient)\
-                .move_to_element(drop_area)\
-                .release()\
-                .perform()
+        self.drag_and_drop(
+            MainPageLocators.INGREDIENT_CARD,
+            MainPageLocators.TOP_BUN_DROP_AREA,
+        )
 
     def create_order(self):
         self.click(MainPageLocators.CREATE_ORDER_BUTTON)
